@@ -9,7 +9,7 @@ const createPaymentUrl = async (req, res) => {
   if (!courseId || !name || !email || !studentId || !amount) {
     return res.status(400).json({ message: "Missing required fields." });
   }
-
+console.log(req)
   try {
     const course = await getCourseById(courseId);
     if (!course) {
