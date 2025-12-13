@@ -8,7 +8,7 @@ require("dotenv").config();
 // Thông tin ngân hàng
 
 // Hàm tạo QR VietQR thật sự
-const generateVietQR = async ( amount, description) => {
+const generateVietQR = async (amount, description) => {
   try {
     const payload = {
       accountNo: process.env.BANK_ACCOUNT_NUMBER, // Assuming these are in .env
@@ -47,7 +47,7 @@ const verifyPayment = async (qrcodeId, transaction_id) => {
   return { success: true, message: "Payment verified and course updated successfully." };
 };
 
-const generateVNPAY = async (amount, description, ipAddr,idPayment) => {
+const generateVNPAY = async (amount, description, ipAddr, idPayment) => {
   const vnpay = new VNPay({
     tmnCode: process.env.VNPAY_TMNCODE,
     secureSecret: process.env.VNPAY_SECRET_KEY,
@@ -56,9 +56,12 @@ const generateVNPAY = async (amount, description, ipAddr,idPayment) => {
     hashAlgorithm: "SHA512", // tùy chọn
     loggerFn: ignoreLogger, // tùy chọn
   });
-  const expireTime = new Date();
-  expireTime.setMinutes(expireTime.getMinutes() + 15);
 
+  const now = new Date();
+  // Convert sang giờ VN
+  const vnNow = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+
+  const expire = new Date(vnNow.getTime() + 15 * 60 * 1000); // 1
   const vnpayUrl = await vnpay.buildPaymentUrl({
     vnp_Amount: amount, //
     vnp_IpAddr: ipAddr || "127.0.0.1", // Use provided IP or default
@@ -68,7 +71,7 @@ const generateVNPAY = async (amount, description, ipAddr,idPayment) => {
     vnp_ReturnUrl: `${process.env.URL_BE}/api/check-payment-vnpay`, //
     vnp_Locale: VnpLocale.VN, // "vn" hoặc "en"
     vnp_CreateDate: dateFormat(new Date()), // tùy chọn, mặc định là hiện tại
-    vnp_ExpireDate: dateFormat(expireTime), // tùy chọn
+    vnp_ExpireDate: dateFormat(expire), // tùy chọn
   });
   return { vnpayUrl, vnp_TxnRef: idPayment };
 };
