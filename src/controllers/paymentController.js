@@ -9,7 +9,6 @@ const createPaymentUrl = async (req, res) => {
   if (!courseId || !name || !email || !studentId || !amount) {
     return res.status(400).json({ message: "Missing required fields." });
   }
-console.log(req)
   try {
     const course = await getCourseById(courseId);
     if (!course) {
@@ -29,7 +28,7 @@ console.log(req)
       "PENDING",
       0 // paid
     );
-
+    console.log(req.ip,"req.ip")
     const vnpayResponse = await generateVNPAY(amount, description, req.ip,idPayment);
     res.status(200).json({ message: vnpayResponse.vnpayUrl });
   } catch (error) {

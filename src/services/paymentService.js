@@ -65,7 +65,7 @@ const generateVNPAY = async (amount, description, ipAddr,idPayment) => {
     vnp_TxnRef: idPayment,
     vnp_OrderInfo: description,
     vnp_OrderType: ProductCode.Other,
-    vnp_ReturnUrl: `${URL_BE}/api/check-payment-vnpay`, //
+    vnp_ReturnUrl: `${process.env.URL_BE}/api/check-payment-vnpay`, //
     vnp_Locale: VnpLocale.VN, // "vn" hoặc "en"
     vnp_CreateDate: dateFormat(new Date()), // tùy chọn, mặc định là hiện tại
     vnp_ExpireDate: dateFormat(expireTime), // tùy chọn
