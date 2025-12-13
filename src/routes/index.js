@@ -25,4 +25,7 @@ router.use("/admin", adminRouter);
 const registrationRoutes = require("./registrationRoutes");
 router.use("/", registrationRoutes);
 
+const authRoutes = require("./authRoutes");
+router.use("/", authRoutes);
+
 module.exports = router;

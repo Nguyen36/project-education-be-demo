@@ -23,7 +23,7 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     course_id INTEGER NOT NULL,
     name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL,
     message TEXT,
     status TEXT DEFAULT 'pending',
     paid INTEGER DEFAULT 0,
@@ -33,6 +33,7 @@ db.exec(`
     course_name TEXT NOT NULL,
     student_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    price INTEGER DEFAULT 0,
     FOREIGN KEY(course_id) REFERENCES Course(id) ON DELETE CASCADE
   );
 `);
@@ -71,21 +72,24 @@ const getStudentById = (id) => {
   return db.prepare(`SELECT * FROM Student WHERE id = ?`).get(id);
 };
 
-const updateStudentPaymentStatus = (id, transaction_id, status = 'completed') => {
+const updateStudentPaymentStatus = (transaction_id, status, paid) => {
   const stmt = db.prepare(`
     UPDATE Student
-    SET paid = 1,
+    SET paid = ?,
         status = ?,
-        transaction_id = ?,
         paid_at = DATETIME('now')
-    WHERE id = ?
+    WHERE transaction_id = ?
   `);
 
-  const info = stmt.run(status, transaction_id, id);
+  const info = stmt.run(paid, status, transaction_id);
 
   if (info.changes === 0) {
-    throw new Error(`Student with ID ${id} not found.`);
+    throw new Error(`Student with transaction ID ${transaction_id} not found or no changes made.`);
   }
+};
+
+const getStudentByTransactionId = (transaction_id) => {
+  return db.prepare(`SELECT * FROM Student WHERE transaction_id = ?`).get(transaction_id);
 };
 
 module.exports = {
@@ -96,5 +100,6 @@ module.exports = {
   insertStudent,
   getAllStudents,
   getStudentById,
-  updateStudentPaymentStatus
+  updateStudentPaymentStatus,
+  getStudentByTransactionId
 };
