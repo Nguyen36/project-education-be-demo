@@ -89,6 +89,7 @@ const checkPaymentVnpay = async (req, res) => {
         student.course_name,
         new Date().toISOString(),
         "PAID",
+        student.amount
       ]);
 
       return res.status(200).send(
