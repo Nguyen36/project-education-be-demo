@@ -21,7 +21,7 @@ const appendSpreadsheet = async (rowData) => {
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
   // Nếu tab tên Sheet1 (mặc định)
 
-    const range = `'Student Courses'!A:E`; // chú ý dấu nháy đơn nếu có khoảng trắng
+    const range = process.env.GOOGLE_SHEET_NAME; // chú ý dấu nháy đơn nếu có khoảng trắng
 
 
   await googleSheetClient.spreadsheets.values.append({
