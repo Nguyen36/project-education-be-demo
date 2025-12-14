@@ -69,7 +69,7 @@ const checkPaymentVnpay = async (req, res) => {
         renderHtml(true, "Thanh toán đã được xử lý trước đó.", {
           name: student.name,
           courseName: student.course_name,
-          amount: student.amount,
+          amount: student.paid,
           transactionId,
         })
       );
@@ -89,14 +89,14 @@ const checkPaymentVnpay = async (req, res) => {
         student.course_name,
         new Date().toISOString(),
         "PAID",
-        student.amount
+        student.paid
       ]);
 
       return res.status(200).send(
         renderHtml(true, "Thanh toán thành công", {
           name: student.name,
           courseName: student.course_name,
-          amount: student.amount,
+          amount: student.paid,
           transactionId,
         })
       );
@@ -110,7 +110,7 @@ const checkPaymentVnpay = async (req, res) => {
         renderHtml(false, "Thanh toán thất bại", {
           name: student.name,
           courseName: student.course_name,
-          amount: student.amount,
+          amount: student.paid,
           transactionId,
         })
       );
