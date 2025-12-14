@@ -26,7 +26,7 @@ const createPaymentUrl = async (req, res) => {
       null, // qr_code_data
       idPayment, // transaction_id (will be updated)
       "PENDING",
-      0 // paid
+      amount // paid
     );
     console.log(req.ip,"req.ip")
     const vnpayResponse = await generateVNPAY(amount, description, req.ip,idPayment);
